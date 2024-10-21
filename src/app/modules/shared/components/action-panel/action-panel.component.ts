@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-action-panel',
@@ -8,5 +8,7 @@ import { Component } from '@angular/core';
   styleUrl: './action-panel.component.scss'
 })
 export class ActionPanelComponent {
-
+  @Input() likesCount: number = 0;
+  @Input() dislikesCount: number = 0;
+  @Input() commentsCount: number = 0;
 }

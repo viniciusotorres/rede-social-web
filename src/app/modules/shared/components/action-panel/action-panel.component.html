@@ -1,19 +1,19 @@
 <section class="bg-[#D9D9D9] p-2 rounded-lg flex justify-end items-center space-x-4">
     <!-- Ícone de Curtir -->
     <div class="flex items-center space-x-1">
-        <i class="fas fa-thumbs-up"></i> <!-- Substitua pelo ícone de curtir -->
-        <span>10</span> <!-- Quantidade de curtidas -->
+        <i class="fas fa-thumbs-up cursor-pointer text-xl hover:text-blue-500 transform hover:scale-125 transition duration-200"></i> <!-- Ícone de curtir com efeito de hover -->
+        <span>{{ likesCount }}</span> <!-- Quantidade de curtidas -->
     </div>
     
     <!-- Ícone de Não Curtir -->
     <div class="flex items-center space-x-1">
-        <i class="fas fa-thumbs-down"></i> <!-- Substitua pelo ícone de não curtir -->
-        <span>2</span> <!-- Quantidade de não curtidas -->
+        <i class="fas fa-thumbs-down cursor-pointer text-xl hover:text-red-500 transform hover:scale-125 transition duration-200"></i> <!-- Ícone de não curtir com efeito de hover -->
+        <span>{{ dislikesCount }}</span> <!-- Quantidade de não curtidas -->
     </div>
     
     <!-- Ícone de Comentar -->
     <div class="flex items-center space-x-1">
-        <i class="fas fa-comment"></i> <!-- Substitua pelo ícone de comentar -->
-        <span>5</span> <!-- Quantidade de comentários -->
+        <i class="fas fa-comment cursor-pointer text-xl hover:text-green-500 transform hover:scale-125 transition duration-200"></i> <!-- Ícone de comentar com efeito de hover -->
+        <span>{{ commentsCount }}</span> <!-- Quantidade de comentários -->
     </div>
 </section>

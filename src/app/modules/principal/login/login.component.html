@@ -1,23 +1,31 @@
 <div class="flex h-full items-center justify-center">
     <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
-        <form>
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
             <div class="mb-4">
                 <label for="email" class="block text-gray-700">Email</label>
-                <input type="email" id="email" class="w-full p-2 border border-gray-300 rounded mt-1" required>
+                <input type="email" id="email" formControlName="email" class="w-full p-2 border border-gray-300 rounded mt-1" required>
+                <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="text-red-500 text-sm">
+                    <div *ngIf="loginForm.get('email')?.errors?.['required']">Email é obrigatório.</div>
+                    <div *ngIf="loginForm.get('email')?.errors?.['email']">Email inválido.</div>
+                </div>
             </div>
             <div class="mb-4">
                 <label for="password" class="block text-gray-700">Senha</label>
-                <input type="password" id="password" class="w-full p-2 border border-gray-300 rounded mt-1" required>
+                <input type="password" id="password" formControlName="password" class="w-full p-2 border border-gray-300 rounded mt-1" required>
+                <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="text-red-500 text-sm">
+                    <div *ngIf="loginForm.get('password')?.errors?.['required']">Senha é obrigatória.</div>
+                    <div *ngIf="loginForm.get('password')?.errors?.['minlength']">Senha deve ter pelo menos 6 caracteres.</div>
+                </div>
             </div>
             <div class="flex items-center justify-between mb-6">
                 <a href="#" class="text-sm text-blue-500 hover:underline">Esqueceu sua senha?</a>
             </div>
-            <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Entrar</button>
+            <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600" [disabled]="loginForm.invalid">Entrar</button>
         </form>
         <div class="mt-6 text-center">
             <p class="text-gray-700">Ainda não tem conta?</p>
-            <a href="#" class="text-blue-500 hover:underline">Cadastrar-se</a>
+            <a (click)="goToRegister()" class="text-blue-500 hover:underline">Cadastrar-se</a>
         </div>
     </div>
 </div>
