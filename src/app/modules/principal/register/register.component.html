@@ -1,33 +1,49 @@
 <div class="flex h-full items-center justify-center">
-    
- 
     <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h2 class="text-2xl font-bold mb-6 text-center">Cadastro</h2>
-        <div class="flex justify-center mb-6">
-            <div class="w-24 h-24 rounded-full bg-gray-300"></div>
-        </div>
-        <form>
-            <div class="mb-4">
-                <label for="name" class="block text-gray-700">Nome</label>
-                <input type="text" id="name" class="w-full p-2 border border-gray-300 rounded mt-1" required>
-            </div>
+        <h2 class="text-2xl font-bold mb-6 text-center">Registrar</h2>
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
             <div class="mb-4">
                 <label for="email" class="block text-gray-700">Email</label>
-                <input type="email" id="email" class="w-full p-2 border border-gray-300 rounded mt-1" required>
+                <input type="email" id="email" formControlName="email" class="w-full p-2 border border-gray-300 rounded mt-1" required>
+                <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="text-red-500 text-sm">
+                    <div *ngIf="registerForm.get('email')?.errors?.['required']">Email é obrigatório.</div>
+                    <div *ngIf="registerForm.get('email')?.errors?.['email']">Email inválido.</div>
+                </div>
             </div>
             <div class="mb-4">
                 <label for="password" class="block text-gray-700">Senha</label>
-                <input type="password" id="password" class="w-full p-2 border border-gray-300 rounded mt-1" required>
+                <input type="password" id="password" formControlName="password" class="w-full p-2 border border-gray-300 rounded mt-1" required>
+                <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="text-red-500 text-sm">
+                    <div *ngIf="registerForm.get('password')?.errors?.['required']">Senha é obrigatória.</div>
+                    <div *ngIf="registerForm.get('password')?.errors?.['minlength']">Senha deve ter pelo menos 6 caracteres.</div>
+                </div>
             </div>
             <div class="mb-4">
-                <label for="confirm-password" class="block text-gray-700">Confirme a Senha</label>
-                <input type="password" id="confirm-password" class="w-full p-2 border border-gray-300 rounded mt-1" required>
+                <label for="name" class="block text-gray-700">Nome</label>
+                <input type="text" id="name" formControlName="name" class="w-full p-2 border border-gray-300 rounded mt-1" required>
+                <div *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched" class="text-red-500 text-sm">
+                    <div *ngIf="registerForm.get('name')?.errors?.['required']">Nome é obrigatório.</div>
+                </div>
             </div>
-            <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Cadastrar</button>
+            <div class="mb-4">
+                <label for="birthdate" class="block text-gray-700">Data de Nascimento</label>
+                <input type="date" id="birthdate" formControlName="birthdate" class="w-full p-2 border border-gray-300 rounded mt-1" required>
+                <div *ngIf="registerForm.get('birthdate')?.invalid && registerForm.get('birthdate')?.touched" class="text-red-500 text-sm">
+                    <div *ngIf="registerForm.get('birthdate')?.errors?.['required']">Data de nascimento é obrigatória.</div>
+                </div>
+            </div>
+            <div class="mb-4">
+                <label for="photo" class="block text-gray-700">Foto</label>
+                <input type="text" id="photo" formControlName="photo" class="w-full p-2 border border-gray-300 rounded mt-1" required>
+                <div *ngIf="registerForm.get('photo')?.invalid && registerForm.get('photo')?.touched" class="text-red-500 text-sm">
+                    <div *ngIf="registerForm.get('photo')?.errors?.['required']">Foto é obrigatória.</div>
+                </div>
+            </div>
+            <div class="mb-4">
+                <label for="bio" class="block text-gray-700">Bio</label>
+                <textarea id="bio" formControlName="bio" class="w-full p-2 border border-gray-300 rounded mt-1"></textarea>
+            </div>
+            <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600" [disabled]="registerForm.invalid">Registrar</button>
         </form>
-        <div class="mt-6 text-center">
-            <p class="text-gray-700">Já tem uma conta?</p>
-            <a href="#" class="text-blue-500 hover:underline">Entrar</a>
-        </div>
     </div>
 </div>

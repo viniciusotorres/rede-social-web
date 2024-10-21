@@ -1,12 +1,52 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../../core/service/auth/auth.service';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { loginInterface } from '../../core/models/login.interface';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
+  loginForm!: FormGroup;
+  
+  constructor(
+    private fb: FormBuilder, 
+    private auth: AuthService,
+    private router: Router,
+  private route: ActivatedRoute) { }
+
+  ngOnInit(): void {
+    this.loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]]
+    });
+  }
+
+  onSubmit(): void {
+    if (this.loginForm.valid) {
+      this.auth.login(this.loginForm.value as loginInterface).subscribe(
+        response => {
+          if (response.token) {
+            sessionStorage.setItem('token', response.token);
+            this.router.navigate(['/feed']); 
+          }
+        },
+        error => {
+          console.error('Login failed', error);
+        }
+      );
+    }
+  }
+
+  goToRegister(): void {
+    this.router.navigate(['inicio/registro'] );
+  }
+  
 
 }

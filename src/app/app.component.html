@@ -29,7 +29,7 @@
         <!-- Navbar -->
         <nav class="bg-gray-800 text-white p-4 rounded-lg">
             <div class="container mx-auto flex justify-between items-center">
-                <h1 class="text-xl">The tribe</h1>
+                <p>The tribe</p>
                 <div class="flex space-x-4">
                     <a href="#" class="hover:text-gray-400">
                         <i class="fas fa-search"></i>
@@ -37,9 +37,13 @@
                     <a href="#" class="hover:text-gray-400">
                         <i class="fas fa-bell"></i>
                     </a>
-                    <a href="#" class="hover:text-gray-400">
+                    <a  [matMenuTriggerFor]="menu" class="hover:text-gray-400">
                         <i class="fas fa-circle"></i>
                     </a>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="changeStatus()">Mudar de Status</button>
+                        <button mat-menu-item (click)="logout()">Sair</button>
+                    </mat-menu>
                 </div>
             </div>
         </nav>
@@ -51,7 +55,7 @@
         </main>
 
         <!-- Footer -->
-        <footer class="bg-gray-800 text-white p-4 rounded-lg mt-2 md:h-[17%] md:mb-[0.5rem]">
+        <footer class="bg-gray-800 text-white p-4 rounded-lg mt-2 md:h-[12%] md:mb-[0.5rem]">
             <div class="container mx-auto text-center">
                 <p>&copy; 2023 The Tribe. Todos os direitos reservados.</p>
             </div>

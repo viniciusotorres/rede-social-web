@@ -6,14 +6,8 @@
     </div>
     
     <!-- Feed com todos os posts -->
-    <div class="bg-white p-4 rounded-lg h-[35rem] overflow-y-auto flex flex-col gap-4">
-        <app-card-post-feed></app-card-post-feed>
-        <app-card-post-feed></app-card-post-feed>
-        <app-card-post-feed></app-card-post-feed>
-        <app-card-post-feed></app-card-post-feed>
-        <app-card-post-feed></app-card-post-feed>
-        <app-card-post-feed></app-card-post-feed>
-        <app-card-post-feed></app-card-post-feed>
-        <!-- Adicione mais <app-card-post-feed> conforme necessário -->
-    </div>
+   <!-- Feed com todos os posts -->
+   <div class="bg-white p-4 rounded-lg h-[35rem] overflow-y-auto flex flex-col gap-4">
+    <app-card-post-feed *ngFor="let post of posts" [post]="post"></app-card-post-feed>
+</div>
 </div>
