@@ -1,0 +1,20 @@
+<section class="bg-[#D9D9D9] p-4 rounded-lg flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
+    <!-- Foto e nome do usuário -->
+    <div class="relative flex-shrink-0 text-center">
+        <img src="https://www.designi.com.br/images/preview/12161378.jpg" alt="User Photo" style="border-radius: 26rem; width: 11rem;" class="mx-auto">
+        <!-- Ícone de status online -->
+        <span class="absolute bottom-[27px] right-[30px] bg-green-500 border-2 border-white rounded-full w-4 h-4"></span>
+        <p class="mt-2">Nome do Usuário</p>
+    </div>
+    
+    <!-- Conteúdo do post -->
+    <div class="flex flex-col md:flex-row w-full justify-between bg-white p-4 rounded-lg">
+        <div class="p-4 md:p-8 flex-grow">
+            <p>Conteúdo do post aqui...</p>
+        </div>
+        <!-- Painel de ações no canto direito extremo -->
+        <div class="flex items-center justify-end mt-4 md:mt-0">
+            <app-action-panel></app-action-panel>
+        </div>
+    </div>
+</section>

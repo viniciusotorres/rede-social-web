@@ -28,7 +28,13 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "src/assets",
+                "output": "/assets"
+              },
+              {
+                "glob": "favicon.ico",
+                "input": "src/",
+                "output": "/"
               }
             ],
             "styles": [
@@ -98,5 +104,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "a1a0d753-d7eb-4662-afed-ed83f7e9dfad"
   }
 }
