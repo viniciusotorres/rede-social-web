@@ -14,8 +14,10 @@ import { AuthService } from '../../../core/service/auth/auth.service';
 export class TokenRegisterComponent implements OnInit {
   tokenForm!: FormGroup;
   email!: string;
+  timeLeft: number = 600; 
+  interval: any;
 
-  constructor(private fb: FormBuilder, private auth: AuthService, private router: Router) { }
+  constructor(private fb: FormBuilder, private router: Router, private auth: AuthService) { }
 
   ngOnInit(): void {
     this.email = sessionStorage.getItem('email') || '';
@@ -25,8 +27,33 @@ export class TokenRegisterComponent implements OnInit {
       token3: ['', [Validators.required, Validators.maxLength(1)]],
       token4: ['', [Validators.required, Validators.maxLength(1)]],
       token5: ['', [Validators.required, Validators.maxLength(1)]],
-      token6: ['', [Validators.required, Validators.maxLength(1)]],
+      token6: ['', [Validators.required, Validators.maxLength(1)]]
     });
+
+    this.startTimer();
+  }
+
+  startTimer(): void {
+    this.interval = setInterval(() => {
+      if (this.timeLeft > 0) {
+        this.timeLeft--;
+      } else {
+        clearInterval(this.interval);
+        // Redirecionar ou mostrar mensagem de tempo esgotado
+        alert('Tempo esgotado!');
+        this.router.navigate(['/']);
+      }
+    }, 1000);
+  }
+
+  get formattedTime(): string {
+    const minutes: number = Math.floor(this.timeLeft / 60);
+    const seconds: number = this.timeLeft % 60;
+    return `${this.pad(minutes)}:${this.pad(seconds)}`;
+  }
+
+  pad(num: number): string {
+    return num < 10 ? '0' + num : num.toString();
   }
 
   onSubmit(): void {
@@ -42,5 +69,15 @@ export class TokenRegisterComponent implements OnInit {
         }
       );
     }
+  }
+
+  onInput(event: any, nextInput: HTMLInputElement): void {
+    if (event.target.value.length === event.target.maxLength) {
+      nextInput.focus();
+    }
+  }
+
+  resendToken(): void {
+    console.log('Solicitar novamente o token');
   }
 }
