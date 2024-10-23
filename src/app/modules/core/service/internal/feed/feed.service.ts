@@ -10,7 +10,6 @@ import { AuthService } from '../../auth/auth.service';
 export class FeedService {
 private readonly url = environments.api;
 private base = 'feed';
-userId: string = '30';
 
   constructor(private http: HttpClient, private auth: AuthService) { 
   }
@@ -18,12 +17,13 @@ userId: string = '30';
   bringFeed(): Observable<any> {
     try {
       const token = sessionStorage.getItem('token');
+      const userId = sessionStorage.getItem('userId');
       if (!token) {
         throw new Error('No token found in sessionStorage');
       }
 
       const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-      return this.http.get(`${this.url}/${this.base}/${this.userId}`, { headers })
+      return this.http.get(`${this.url}/${this.base}/${userId}`, { headers })
       .pipe(
         catchError(this.handleError)
       );
@@ -36,12 +36,13 @@ userId: string = '30';
   createPost(content: string): Observable<any> {
     try {
       const token = sessionStorage.getItem('token');
+      const userId = sessionStorage.getItem('userId');
       if (!token) {
         throw new Error('No token found in sessionStorage');
       }
       const body = { content };
       const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-      return this.http.post(`${this.url}/${this.base}/${this.userId}/post`, body, { headers })
+      return this.http.post(`${this.url}/${this.base}/${userId}/post`, body, { headers })
     } catch (error) {
       return throwError('An unexpected error occurred');
     }

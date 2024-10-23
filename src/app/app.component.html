@@ -1,39 +1,24 @@
 <div class="min-h-screen flex flex-col md:flex-row">
-    <!-- Sidebar -->
-    <aside class="hidden md:flex bg-gray-800 text-white p-4 flex-col mt-2 ml-2 mb-2 rounded-lg md:mb-[0.5rem] md:mt-2 md:ml-2 md:mb-2">
-        <ul class="mt-4">
-            <li class="mb-2 cursor-pointer">
-                <a (click)="goToHome()" class="block p-2 hover:bg-gray-600 rounded text-center">
-                    <i class="fas fa-home"></i>
-                </a>
-            </li>
-            <li class="mb-2 cursor-pointer">
-                <a routerLink="/profile" class="block p-2 hover:bg-gray-600 rounded text-center">
-                    <i class="fas fa-user"></i>
-                </a>
-            </li>
-            <li class="mb-2 cursor-pointer">
-                <a routerLink="/settings" class="block p-2 hover:bg-gray-600 rounded text-center">
-                    <i class="fas fa-cog"></i>
-                </a>
-            </li>
-            <li class="mb-2 cursor-pointer">
-                <a (click)="goToFeed()" class="block p-2 hover:bg-gray-600 rounded text-center">
-                    <i class="fas fa-rss"></i>
-                </a>
-            </li>
-        </ul>
-    </aside>
 
     <div class="flex flex-col flex-grow ml-2 mt-2 mr-2">
         <!-- Navbar -->
         <nav class="bg-gray-800 text-white p-4 rounded-lg">
             <div class="container mx-auto flex justify-between items-center">
-                <p>The tribe</p>
-                <div class="flex space-x-4">
-                    <a href="#" class="hover:text-gray-400">
-                        <i class="fas fa-search"></i>
-                    </a>
+                <p class="items-center justify-center">The tribe</p>
+                <div class="flex space-x-4 items-center">
+                    <div class="relative">
+                        <input type="text" class="bg-gray-700 text-white p-2 rounded" placeholder="Pesquisar..." (input)="searchUser($event)">
+                        <div *ngIf="searchResults.length > 0" class="absolute bg-white text-black mt-2 rounded shadow-lg w-full z-10">
+                          <ul>
+                            <li *ngFor="let user of searchResults" class="p-2 hover:bg-gray-200 cursor-pointer" (click)="goToUserProfile(user.id)">
+                              <div class="flex items-center">
+                                <img [src]="'data:image/jpeg;base64,' + user.photo" alt="User Photo" class="w-8 h-8 rounded-full object-cover mr-2">
+                                <span>{{ user.name }}</span>
+                              </div>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
                     <a href="#" class="hover:text-gray-400">
                         <i class="fas fa-bell"></i>
                     </a>
@@ -41,8 +26,21 @@
                         <i class="fas fa-circle"></i>
                     </a>
                     <mat-menu #menu="matMenu">
-                        <button mat-menu-item (click)="changeStatus()">Mudar de Status</button>
-                        <button mat-menu-item (click)="logout()">Sair</button>
+                        <button mat-menu-item (click)="goToMyProfile()">
+                            <i class="fas fa-user"></i> Meu Perfil
+                        </button>
+                        <button mat-menu-item >
+                            <i class="fas fa-cog"></i> Configurações
+                        </button>
+                        <button mat-menu-item (click)="goToFeed()">
+                            <i class="fas fa-rss"></i> Feed
+                        </button>
+                        <button mat-menu-item (click)="changeStatus()">
+                            <i class="fas fa-exchange-alt"></i> Mudar de Status
+                        </button>
+                        <button mat-menu-item (click)="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Sair
+                        </button>
                     </mat-menu>
                 </div>
             </div>
