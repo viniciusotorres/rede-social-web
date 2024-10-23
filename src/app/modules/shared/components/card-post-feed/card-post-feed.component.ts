@@ -11,7 +11,7 @@ interface Post {
   comments: any[];
   user_id: number;
   name: string;
-  userPhoto?: string;
+  photo?: string;
 }
 
 @Component({
@@ -24,8 +24,8 @@ interface Post {
 })
 export class CardPostFeedComponent implements OnInit {
   @Input() post!: Post; 
-  userPhoto: string = 'https://www.designi.com.br/images/preview/12161378.jpg'; 
-  userName: string = 'Nome do Usuário';
+  userPhoto: string = ''; 
+  userName: string = '';
   content: string = '';
   createdAt: string = '';
   likesCount: number = 0;
@@ -47,7 +47,7 @@ export class CardPostFeedComponent implements OnInit {
         console.error('Error parsing post content', error);
         this.content = this.post.content; 
       }
-      this.userPhoto = this.post.userPhoto || this.userPhoto;
+      this.userPhoto = this.post.photo ? `data:image/jpeg;base64,${this.post.photo}` : ''; 
       this.userName = this.post.name || this.userName;
 
       this.createdAt = this.datePipe.transform(this.post.createdAt, 'short') || '';

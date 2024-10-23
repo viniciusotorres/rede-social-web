@@ -26,9 +26,9 @@ export class AuthService {
     }
   }
 
-  register(data: registerInterface): Observable<any> {
+  register(formData: FormData): Observable<any> {
     try {
-      return this.http.post(`${this.url_api}/${this.base}/register`, data)
+      return this.http.post(`${this.url_api}/${this.base}/register`, formData)
         .pipe(
           catchError(this.handleError)
         );

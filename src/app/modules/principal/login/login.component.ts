@@ -34,6 +34,7 @@ export class LoginComponent implements OnInit {
         response => {
           if (response.token) {
             sessionStorage.setItem('token', response.token);
+            sessionStorage.setItem('userId', response.userId);
             this.router.navigate(['/feed']); 
           }
         },
