@@ -3,6 +3,8 @@ import { CardSelfFeedComponent } from "../../../shared/components/card-self-feed
 import { CardPostFeedComponent } from "../../../shared/components/card-post-feed/card-post-feed.component";
 import { FeedService } from '../../../core/service/internal/feed/feed.service';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
+import { AuthService } from '../../../core/service/auth/auth.service';
 
 @Component({
   selector: 'app-feed-principal',
@@ -12,22 +14,35 @@ import { CommonModule } from '@angular/common';
   styleUrl: './feed-principal.component.scss'
 })
 export class FeedPrincipalComponent {
+  private loginEventSubscription!: Subscription;
+
   posts: any[] = [];
 
-  constructor(private feedService: FeedService) { }
+  constructor(private feedService: FeedService, private auth: AuthService) { }
 
   ngOnInit(): void {
-    this.feedService.bringFeed().subscribe(
-      (data: any) => {
-        if (data && Array.isArray(data.posts)) {
-          this.posts = data.posts;
-        } else {
-          console.error('Expected an array of posts');
-        }
-      },
-      (error: any) => {
-        console.error('Error fetching feed:', error);
-      }
-    );
-  }
+    this.loadFeed();
+    this.loginEventSubscription = this.auth.getLoginEvent().subscribe(() => {
+      this.loadFeed();
+    });
 }
+
+
+private loadFeed(): void {
+  this.feedService.bringFeed().subscribe(
+    (data: any) => {
+      if (data && Array.isArray(data.posts)) {
+        this.posts = data.posts;
+      } else {
+        console.error('Expected an array of posts');
+      }
+    },
+    (error: any) => {
+      console.error('Error fetching feed:', error);
+    }
+ 
+  );
+}
+
+}
+

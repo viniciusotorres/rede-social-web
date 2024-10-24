@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { AuthService } from '../../core/service/auth/auth.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -14,12 +14,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
+  @Output() loginEvent = new EventEmitter<void>();
   
   constructor(
     private fb: FormBuilder, 
     private auth: AuthService,
     private router: Router,
-  private route: ActivatedRoute) { }
+    private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -35,7 +36,11 @@ export class LoginComponent implements OnInit {
           if (response.token) {
             sessionStorage.setItem('token', response.token);
             sessionStorage.setItem('userId', response.userId);
-            this.router.navigate(['/feed']); 
+            this.auth.emitLoginEvent();
+            this.router.navigate(['/feed']).then(() => {
+              window.location.reload(); 
+            });
+            
           }
         },
         error => {
@@ -47,6 +52,10 @@ export class LoginComponent implements OnInit {
 
   goToRegister(): void {
     this.router.navigate(['inicio/registro'] );
+  }
+
+  goToForgotPassword(): void {
+    this.router.navigate(['inicio/esqueci-senha']);
   }
   
 
