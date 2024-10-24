@@ -1,19 +1,21 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, Subject, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { loginInterface } from '../../models/login.interface';
 import { environments } from '../../../../../environments/environments.prod';
 import { registerInterface } from '../../models/register.interface';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private readonly url_api = environments.api;
+  private loginEventSubject = new Subject<void>();
   private base = 'auth';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   login(data: loginInterface): Observable<any> {
     try {
@@ -48,6 +50,18 @@ export class AuthService {
     sessionStorage.removeItem('token');
   }
 
+  verifyLogin(): boolean {
+    return sessionStorage.getItem('token') === null;
+  }
+
+  emitLoginEvent(): void {
+    this.loginEventSubject.next();
+  }
+
+  getLoginEvent() {
+    return this.loginEventSubject.asObservable();
+  }
+
   getUserIdFromToken(): string | null {
     try {
       const token = sessionStorage.getItem('token');
@@ -63,6 +77,20 @@ export class AuthService {
     }
   }
 
+  forgotPassword(email: string): Observable<any> {
+    return this.http.post(`${this.url_api}/${this.base}/forgot-password`, { email })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  confirmPassword(token: string, password: string): Observable<any> {
+    return this.http.post(`${this.url_api}/${this.base}/confirm-password`, { token, password })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+  
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'An unknown error occurred!';
     if (error.error instanceof ErrorEvent) {

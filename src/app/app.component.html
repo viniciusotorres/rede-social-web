@@ -1,10 +1,12 @@
 <div class="min-h-screen flex flex-col md:flex-row">
 
-    <div class="flex flex-col flex-grow ml-2 mt-2 mr-2">
+    <div class="flex flex-col flex-grow ">
         <!-- Navbar -->
-        <nav class="bg-gray-800 text-white p-4 rounded-lg">
+         @if (isLogged) {
+        <nav class="bg-gray-800 text-white p-4 ">
             <div class="container mx-auto flex justify-between items-center">
                 <p class="items-center justify-center">The tribe</p>
+                @if (isLogged) {
                 <div class="flex space-x-4 items-center">
                     <div class="relative">
                         <input type="text" class="bg-gray-700 text-white p-2 rounded" placeholder="Pesquisar..." (input)="searchUser($event)">
@@ -43,11 +45,13 @@
                         </button>
                     </mat-menu>
                 </div>
+            }
             </div>
         </nav>
+    }
 
         <!-- Conteúdo Principal -->
-        <main class="flex-grow p-4 md:h-[60%]">
+        <main [ngClass]="{'p-4': isLogged, 'flex-grow': true, 'md:h-[60%]': true}">
             <router-outlet></router-outlet>
         </main>
 
