@@ -16,6 +16,7 @@ export class RegisterComponent implements OnInit {
   registerForm!: FormGroup;
   imageSrc: string | ArrayBuffer | null = '';
   selectedFile: File | null = null;
+  isLoading = false;
 
   constructor(private fb: FormBuilder, private auth: AuthService, private router: Router) { }
   
@@ -31,6 +32,7 @@ export class RegisterComponent implements OnInit {
   }
 
  onSubmit(): void {
+      this.isLoading = true;
     
       const formData = new FormData();
       formData.append('email', this.registerForm.get('email')?.value);
@@ -44,13 +46,14 @@ export class RegisterComponent implements OnInit {
 
       this.auth.register(formData).subscribe(
         (response: { token: string; }) => {
-          console.log('Registration successful', response);
+          this.isLoading = false;
           const email = this.registerForm.get('email')?.value;
           sessionStorage.setItem('email', email);
           sessionStorage.setItem('authToken', response.token);
           this.router.navigate(['inicio/registro/token']);
         },
         (error: any) => {
+          this.isLoading = false;
           console.error('Registration failed', error);
         }
       );

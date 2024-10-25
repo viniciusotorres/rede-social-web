@@ -16,6 +16,8 @@ export class TokenRegisterComponent implements OnInit {
   email!: string;
   timeLeft: number = 600; 
   interval: any;
+  isLoading = false;
+  isLoadingAgain = false;
 
   constructor(private fb: FormBuilder, private router: Router, private auth: AuthService) { }
 
@@ -57,14 +59,16 @@ export class TokenRegisterComponent implements OnInit {
   }
 
   onSubmit(): void {
+    this.isLoading = true;
     if (this.tokenForm.valid) {
       const token = `${this.tokenForm.get('token1')?.value}${this.tokenForm.get('token2')?.value}${this.tokenForm.get('token3')?.value}${this.tokenForm.get('token4')?.value}${this.tokenForm.get('token5')?.value}${this.tokenForm.get('token6')?.value}`;
       this.auth.validarToken(this.email, token).subscribe(
         (response: any) => {
-          console.log('Token validation successful', response);
+          this.isLoading = false;
           this.router.navigate(['/inicio']);
         },
         (error: any) => {
+          this.isLoading = false;
           console.error('Token validation failed', error);
         }
       );
@@ -78,6 +82,16 @@ export class TokenRegisterComponent implements OnInit {
   }
 
   resendToken(): void {
-    console.log('Solicitar novamente o token');
+    this.isLoadingAgain = true;
+    this.auth.sendAgainCode(this.email).subscribe(
+      (response: any) => {
+        this.isLoadingAgain = false;
+        window.location.reload();
+      },
+      (error: any) => {
+        this.isLoadingAgain = false;
+        console.error('Failed to send token again', error);
+      }
+    );
   }
 }

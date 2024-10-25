@@ -1,25 +1,39 @@
-<div class="flex h-full items-center justify-center">
-    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md mt-0 mt-40 md:mt-0">
-        <p class="text-2xl font-bold mb-2 text-center">Validação de Token</p>
+<!-- Token Validation Section -->
+<div class="flex h-screen flex-col md:flex-row">
+    <!-- Coluna da esquerda para o card de validação de token no desktop e para o fundo no mobile -->
+    <div class="flex items-center justify-center w-full md:w-1/2 relative h-full">
+      <div class="absolute inset-0 md:hidden">
+        <img src="https://w0.peakpx.com/wallpaper/518/101/HD-wallpaper-native-pattern-abstract-colors.jpg" alt="Logo" class="w-full h-full object-cover">
+      </div>
+      <div class="bg-white p-[1.5rem] rounded-lg shadow-md w-full max-w-md mt-[8rem] md:mt-0 relative z-10 md:z-auto m-4">
+        <p class="text-2xl font-bold mb-2 text-center">Quase Lá! Valide Seu Token</p>
         <p class="text-center mb-4">Tempo restante: {{ formattedTime }}</p>
-
         <form [formGroup]="tokenForm" (ngSubmit)="onSubmit()">
-            <div class="flex justify-center space-x-2 mb-6">
-                <input type="text" maxlength="1" formControlName="token1" class="w-12 h-12 text-center text-2xl border border-gray-300 rounded" required (input)="onInput($event, token2)">
-                <input type="text" maxlength="1" formControlName="token2" class="w-12 h-12 text-center text-2xl border border-gray-300 rounded" required #token2 (input)="onInput($event, token3)">
-                <input type="text" maxlength="1" formControlName="token3" class="w-12 h-12 text-center text-2xl border border-gray-300 rounded" required #token3 (input)="onInput($event, token4)">
-                <input type="text" maxlength="1" formControlName="token4" class="w-12 h-12 text-center text-2xl border border-gray-300 rounded" required #token4 (input)="onInput($event, token5)">
-                <input type="text" maxlength="1" formControlName="token5" class="w-12 h-12 text-center text-2xl border border-gray-300 rounded" required #token5 (input)="onInput($event, token6)">
-                <input type="text" maxlength="1" formControlName="token6" class="w-12 h-12 text-center text-2xl border border-gray-300 rounded" required #token6>
-            </div>
-            <p class="text-center mb-4 text-gray-700">Por favor, insira o token de 6 dígitos que foi enviado para o seu e-mail. </p>
-
-            <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Verificar</button>
-            <div class="flex flex-col gap-2 mt-4">
-                <p class="text-center mt-4 text-gray-700 font-bold">O token não chegou ao seu email?</p>
-                <p class="text-center text-gray-500 underline cursor-pointer" (click)="resendToken()">Solicitar novamente</p>
-
-            </div>
+          <div class="flex justify-center space-x-2 mb-6">
+            <input type="text" maxlength="1" formControlName="token1" class="w-12 h-12 text-center text-2xl border border-gray-300 rounded" required (input)="onInput($event, token2)">
+            <input type="text" maxlength="1" formControlName="token2" class="w-12 h-12 text-center text-2xl border border-gray-300 rounded" required #token2 (input)="onInput($event, token3)">
+            <input type="text" maxlength="1" formControlName="token3" class="w-12 h-12 text-center text-2xl border border-gray-300 rounded" required #token3 (input)="onInput($event, token4)">
+            <input type="text" maxlength="1" formControlName="token4" class="w-12 h-12 text-center text-2xl border border-gray-300 rounded" required #token4 (input)="onInput($event, token5)">
+            <input type="text" maxlength="1" formControlName="token5" class="w-12 h-12 text-center text-2xl border border-gray-300 rounded" required #token5 (input)="onInput($event, token6)">
+            <input type="text" maxlength="1" formControlName="token6" class="w-12 h-12 text-center text-2xl border border-gray-300 rounded" required #token6>
+          </div>
+          <p class="text-center mb-4 text-gray-700">Por favor, insira o token de 6 dígitos que foi enviado para o seu e-mail.</p>
+          <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600" [disabled]="isLoading">
+            <span *ngIf="!isLoading">Verificar</span>
+            <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          </button>          
+          <div class="flex flex-col gap-2 mt-4">
+            <p class="text-center mt-4 text-gray-700 font-bold">O token não chegou ao seu email?</p>
+            <button type="button" class="w-full bg-gray-500 text-white p-2 rounded hover:bg-gray-600" (click)="resendToken()" [disabled]="isLoadingAgain">
+              <span *ngIf="!isLoadingAgain">Solicitar novamente</span>
+              <span *ngIf="isLoadingAgain" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            </button>
+          </div>
         </form>
+      </div>
     </div>
-</div>
+    <!-- Coluna da direita para a imagem no desktop -->
+    <div class="hidden md:flex w-1/2">
+      <img src="https://w0.peakpx.com/wallpaper/518/101/HD-wallpaper-native-pattern-abstract-colors.jpg" alt="Logo" class="w-full h-full object-cover">
+    </div>
+  </div>
