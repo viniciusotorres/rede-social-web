@@ -14,7 +14,7 @@ import { AuthService } from '../../core/service/auth/auth.service';
 })
 export class ConfirmPasswordComponent implements OnInit {
   confirmPasswordForm!: FormGroup;
-  token: string | null = null;
+  isLoading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -24,13 +24,14 @@ export class ConfirmPasswordComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.token = this.route.snapshot.queryParamMap.get('token');
     this.confirmPasswordForm = this.fb.group({
+      token: ['', [Validators.required, Validators.minLength(6)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required]]
     }, { validator: this.mustMatch('password', 'confirmPassword') });
   }
 
+  
   mustMatch(controlName: string, matchingControlName: string) {
     return (formGroup: FormGroup) => {
       const control = formGroup.controls[controlName];
@@ -49,18 +50,26 @@ export class ConfirmPasswordComponent implements OnInit {
   }
 
   onSubmit(): void {
-    // if (this.confirmPasswordForm.valid && this.token) {
-    //   const password = this.confirmPasswordForm.value.password;
-    //   this.authService.confirmPassword(this.token, password).subscribe(
-    //     () => {
-    //       alert('Senha alterada com sucesso.');
-          
-    //     },
-    //     (error: any) => {
-    //       console.error('Erro ao confirmar senha', error);
-    //     }
-    //   );
-    // }
-    this.router.navigate(['inicio/entrar']);
+    if (this.confirmPasswordForm.valid) {
+      this.isLoading = true;
+      const password = this.confirmPasswordForm.value.password;
+      const token = this.confirmPasswordForm.value.token;
+      const email = sessionStorage.getItem('email');
+      if (!email) {     
+        console.error('Email não encontrado');
+        return;
+      }
+      this.authService.confirmPassword(token, password, email).subscribe(
+        () => { 
+          this.isLoading = false;
+          alert('Senha redefinida com sucesso.');
+          this.router.navigate(['/inicio/entrar']);
+        },
+        (error: any) => {
+          this.isLoading = false;
+          console.error('Erro ao confirmar senha', error);
+        }
+      );
+    }
   }
 }

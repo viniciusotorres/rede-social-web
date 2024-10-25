@@ -17,28 +17,48 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
+  /**
+   * Realiza o login do usuário.
+   * @param data Dados de login do usuário.
+   * @returns Observable com a resposta do servidor.
+   */
   login(data: loginInterface): Observable<any> {
-    try {
-      return this.http.post(`${this.url_api}/${this.base}/login`, data)
-        .pipe(
-          catchError(this.handleError)
-        );
-    } catch (error) {
-      return throwError('An unexpected error occurred');
-    }
+    return this.http.post(`${this.url_api}/${this.base}/login`, data)
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 
+  /**
+   * Envia novamente o código de confirmação para o e-mail.
+   * @param email O e-mail do usuário.
+   * @returns Observable com a resposta do servidor.
+   */
+  sendAgainCode(email: string): Observable<any> {
+    return this.http.post(`${this.url_api}/${this.base}/send-again-code`, email, { responseType: 'text' })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  /**
+   * Realiza o registro de um novo usuário.
+   * @param formData Dados do formulário de registro.
+   * @returns Observable com a resposta do servidor.
+   */
   register(formData: FormData): Observable<any> {
-    try {
-      return this.http.post(`${this.url_api}/${this.base}/register`, formData)
-        .pipe(
-          catchError(this.handleError)
-        );
-    } catch (error) {
-      return throwError('An unexpected error occurred');
-    }
+    return this.http.post(`${this.url_api}/${this.base}/register`, formData)
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 
+  /**
+   * Valida o código de confirmação do usuário.
+   * @param email E-mail do usuário.
+   * @param code Código de confirmação.
+   * @returns Observable com a resposta do servidor.
+   */
   validarToken(email: string, code: string): Observable<any> {
     return this.http.post(`${this.url_api}/${this.base}/verify`, { email, code }, { responseType: 'text' })
       .pipe(
@@ -46,63 +66,107 @@ export class AuthService {
       );
   }
 
+  /**
+   * Realiza o logout do usuário, removendo o token da sessão.
+   */
   logout(): void {
     sessionStorage.removeItem('token');
   }
 
-  verifyLogin(): boolean {
-    return sessionStorage.getItem('token') === null;
+  /**
+   * Verifica se o usuário está logado.
+   * @returns true se o usuário não estiver logado; caso contrário, false.
+   */
+  isLoggedIn(): boolean {
+    return sessionStorage.getItem('token') !== null;
   }
 
+  /**
+   * Emite um evento de login.
+   */
   emitLoginEvent(): void {
     this.loginEventSubject.next();
   }
 
+  /**
+   * Retorna um Observable para o evento de login.
+   * @returns Observable do evento de login.
+   */
   getLoginEvent() {
     return this.loginEventSubject.asObservable();
   }
 
+  /**
+   * Obtém o ID do usuário a partir do token JWT.
+   * @returns ID do usuário ou null se não encontrado.
+   */
   getUserIdFromToken(): string | null {
     try {
       const token = sessionStorage.getItem('token');
       if (!token) {
-        console.error('No token found in sessionStorage');
+        console.error('Nenhum token encontrado no sessionStorage');
         return null;
       }
       const decoded: any = jwt_decode(token);
       return decoded.id || null;
     } catch (error) {
-      console.error('Error decoding token', error);
+      console.error('Erro ao decodificar o token', error);
       return null;
     }
   }
 
+  /**
+   * Envia uma solicitação para redefinir a senha.
+   * @param email O e-mail do usuário.
+   * @returns Observable com a resposta do servidor.
+   */
   forgotPassword(email: string): Observable<any> {
-    return this.http.post(`${this.url_api}/${this.base}/forgot-password`, { email })
+    return this.http.post(`${this.url_api}/${this.base}/forgot-password`, email, { responseType: 'text' })
       .pipe(
         catchError(this.handleError)
       );
   }
 
-  confirmPassword(token: string, password: string): Observable<any> {
-    return this.http.post(`${this.url_api}/${this.base}/confirm-password`, { token, password })
+  /**
+   * Confirma a redefinição da senha do usuário.
+   * @param token Código de confirmação.
+   * @param password Nova senha do usuário.
+   * @param email E-mail do usuário.
+   * @returns Observable com a resposta do servidor.
+   */
+  confirmPassword(token: string, password: string, email: string): Observable<any> {
+    const params = new HttpParams()
+      .set('code', token)
+      .set('password', password)
+      .set('email', email);
+
+    return this.http.post(`${this.url_api}/${this.base}/reset-password`, null, { params, responseType: 'text' })
       .pipe(
         catchError(this.handleError)
       );
   }
-  
+
+  /**
+   * Tratamento de erros da requisição HTTP.
+   * @param error O erro recebido.
+   * @returns Observable com a mensagem de erro apropriada.
+   */
   private handleError(error: HttpErrorResponse) {
-    let errorMessage = 'An unknown error occurred!';
+    let errorMessage = 'Ocorreu um erro desconhecido!';
     if (error.error instanceof ErrorEvent) {
-      errorMessage = `A client-side error occurred: ${error.error.message}`;
+      errorMessage = `Erro do lado do cliente: ${error.error.message}`;
     } else {
-      errorMessage = `A backend error occurred: ${error.status}, ` +
-        `body was: ${error.error}`;
+      errorMessage = `Erro do lado do servidor: ${error.status}, corpo: ${error.error}`;
+      if (error.status === 401) {
+        errorMessage = 'Não autorizado. Verifique suas credenciais.';
+      } else if (error.status === 404) {
+        errorMessage = 'Recurso solicitado não encontrado.';
+      }
     }
     return throwError(errorMessage);
   }
 }
-
 function jwt_decode(token: string): any {
   throw new Error('Function not implemented.');
 }
+

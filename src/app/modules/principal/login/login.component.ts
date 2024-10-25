@@ -15,6 +15,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   @Output() loginEvent = new EventEmitter<void>();
+  isLoading = false;
   
   constructor(
     private fb: FormBuilder, 
@@ -31,9 +32,11 @@ export class LoginComponent implements OnInit {
 
   onSubmit(): void {
     if (this.loginForm.valid) {
+      this.isLoading = true;
       this.auth.login(this.loginForm.value as loginInterface).subscribe(
         response => {
           if (response.token) {
+            this.isLoading = true;
             sessionStorage.setItem('token', response.token);
             sessionStorage.setItem('userId', response.userId);
             this.auth.emitLoginEvent();
@@ -44,6 +47,7 @@ export class LoginComponent implements OnInit {
           }
         },
         error => {
+          this.isLoading = false;
           console.error('Login failed', error);
         }
       );

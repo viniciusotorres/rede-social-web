@@ -14,6 +14,7 @@ import { AuthService } from '../../core/service/auth/auth.service';
 })
 export class ForgotPasswordComponent implements OnInit {
   forgotPasswordForm!: FormGroup;
+  isLoading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -28,18 +29,20 @@ export class ForgotPasswordComponent implements OnInit {
   }
 
   onSubmit(): void {
-    // if (this.forgotPasswordForm.valid) {
-    //   const email = this.forgotPasswordForm.value.email;
-    //   this.authService.forgotPassword(email).subscribe(
-    //     () => {
-    //       alert('Instruções para redefinir a senha foram enviadas para o seu e-mail.');
-    //       this.router.navigate(['/login']);
-    //     },
-    //     (error: any) => {
-    //       console.error('Erro ao enviar instruções de redefinição de senha', error);
-    //     }
-    //   );
-    // }
-    this.router.navigate(['/inicio/resetar-senha']);
+    if (this.forgotPasswordForm.valid) {
+      this.isLoading = true; 
+      const email = this.forgotPasswordForm.value.email;
+      sessionStorage.setItem('email', email);
+      this.authService.forgotPassword(email).subscribe(
+        () => {
+          this.isLoading = false; 
+          this.router.navigate(['/inicio/resetar-senha']);
+        },
+        (error: any) => {
+          this.isLoading = false; 
+          console.error('Erro ao enviar instruções de redefinição de senha', error);
+        }
+      );
+    }
   }
 }
