@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { ActionPanelComponent } from '../action-panel/action-panel.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -13,6 +13,7 @@ import { FeedService } from '../../../core/service/internal/feed/feed.service';
 })
 export class CardSelfFeedComponent {
   postForm: FormGroup;
+  @Output() postCreated = new EventEmitter<any>();
 
   constructor(private fb: FormBuilder, private feedService: FeedService) {
     this.postForm = this.fb.group({
@@ -22,10 +23,12 @@ export class CardSelfFeedComponent {
 
   onSubmit(): void {
     if (this.postForm.valid) {
-      this.feedService.createPost(this.postForm.value).subscribe(
+      const content = this.postForm.get('content')?.value;
+      this.feedService.createPost(content).subscribe(
         (response: any) => {
           console.log('Post created successfully', response);
           this.postForm.reset();
+          this.postCreated.emit();
         },
         (error: any) => {
           console.error('Error creating post', error);

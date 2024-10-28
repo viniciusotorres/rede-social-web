@@ -14,6 +14,20 @@ import { AuthService } from '../../../core/service/auth/auth.service';
   styleUrl: './feed-principal.component.scss'
 })
 export class FeedPrincipalComponent {
+  postsTopper: any[] = [];
+  usersTopper: any[] = [];
+  
+  loggedInUser = {
+    name: 'Logged In User',
+    email: 'user@example.com',
+    followers: 150,
+    following: 100,
+    posts: 50,
+    profilePicture: 'https://via.placeholder.com/150',
+    status: 'Online',
+    reach: 5000
+  };
+
   private loginEventSubscription!: Subscription;
 
   posts: any[] = [];
@@ -22,10 +36,14 @@ export class FeedPrincipalComponent {
 
   ngOnInit(): void {
     this.loadFeed();
+    this.loadTopPosts();
+    this.loadTopUsers();
     this.loginEventSubscription = this.auth.getLoginEvent().subscribe(() => {
       this.loadFeed();
+      this.loadTopPosts();
+      this.loadTopUsers();
     });
-}
+  }
 
 
 private loadFeed(): void {
@@ -42,6 +60,52 @@ private loadFeed(): void {
     }
  
   );
+}
+
+private loadTopPosts(): void {
+  this.feedService.bringTopPosts().subscribe(
+    (data: any) => {
+      if (data && Array.isArray(data.topPosts)) {
+        this.postsTopper = data.topPosts;
+      } else {
+        console.error('Expected an array of top posts');
+      }
+    },
+    (error: any) => {
+      console.error('Error fetching top posts:', error);
+    }
+  );
+}
+
+
+private loadTopUsers(): void {
+  this.feedService.bringTopUsers().subscribe(
+    (data: any) => {
+      if (data && Array.isArray(data)) {
+        this.usersTopper = data;
+      } else {
+        console.error('Expected an array of top users');
+      }
+    },
+    (error: any) => {
+      console.error('Error fetching top users:', error);
+    }
+  );
+}
+
+onPostUpdated(): void {
+  this.loadFeed();
+  this.loadTopPosts();
+}
+
+postCreated(): void {
+  this.loadFeed();
+  this.loadTopPosts();
+}
+
+postDeleted(): void {
+  this.loadFeed();
+  this.loadTopPosts();
 }
 
 }

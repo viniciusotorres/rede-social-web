@@ -1,13 +1,54 @@
-<div class="flex flex-col">
-    <h4 class="ml-5">FEED</h4>
-    <!-- Área para fazer um post -->
-    <div class="mb-4 p-2">
-        <app-card-self-feed></app-card-self-feed>
+<div class="flex flex-col lg:flex-row gap-4 justify-around h-full">
+  <div class="bg-gray-100 p-4 rounded mb-2 w-full lg:w-[10%] hidden lg:block">
+    <img src="https://www.designi.com.br/images/preview/12161376.jpg" alt="Profile Picture"
+      class="w-24 h-24 rounded-full mx-auto object-cover mb-4">
+    <p class="font-bold text-center">{{ loggedInUser.name }}</p>
+    <p class="text-sm text-gray-600 text-center">{{ loggedInUser.email }}</p>
+    <p class="text-sm text-green-600 text-center">{{ loggedInUser.status }}</p>
+    <div class="mt-4">
+      <p class="text-sm text-gray-600">Seguidores: {{ loggedInUser.followers }}</p>
+      <p class="text-sm text-gray-600">Seguindo: {{ loggedInUser.following }}</p>
+      <p class="text-sm text-gray-600">Posts: {{ loggedInUser.posts }}</p>
+      <p class="text-sm text-gray-600">Alcance: {{ loggedInUser.reach }}</p>
     </div>
-    
+  </div>
+
+  <div class="flex flex-col items-center w-full lg:w-[60%]">
+    <!-- Área para fazer um post -->
+    <div class="mb-4 p-2 w-full">
+      <app-card-self-feed (postCreated)="postCreated()"></app-card-self-feed>
+    </div>
+
     <!-- Feed com todos os posts -->
-   <!-- Feed com todos os posts -->
-   <div class="bg-white p-4 rounded-lg h-[35rem] overflow-y-auto flex flex-col gap-4">
-    <app-card-post-feed *ngFor="let post of posts" [post]="post"></app-card-post-feed>
-</div>
+    <div class="bg-white p-4 w-full rounded-lg h-[35rem] overflow-y-auto flex flex-col gap-4">
+      <app-card-post-feed 
+      *ngFor="let post of posts" 
+      [post]="post" 
+      (postUpdated)="onPostUpdated()"
+      (postDeleted)="postDeleted()"></app-card-post-feed>
+    </div>
+  </div>
+
+
+  <div class="flex flex-col w-full lg:w-[20%] gap-4 hidden lg:block h-full">
+    <p class="font-bold text-lg mb-2">Topper Posts</p>
+    <div *ngFor="let post of postsTopper" class="flex justify-between items-center bg-gray-100 p-2 rounded mb-2">
+      <div>
+        <p class="font-bold">{{ post.content }}</p>
+        <p class="text-sm text-gray-600">Curtidas: {{ post.likes.length }} | Comentários: {{ post.comments.length }}</p>
+      </div>
+      <div class="text-sm text-gray-600">
+        {{ post.createdAt | date: 'HH:mm' }}
+
+      </div>
+    </div>
+
+    <p class="font-bold text-lg mb-2 mt-4">Topper Users</p>
+    <div *ngFor="let user of usersTopper" class="flex justify-between items-center bg-gray-100 p-2 rounded mb-2">
+      <div>
+        <p class="font-bold">{{ user.name }}</p>
+        <p class="text-sm text-gray-600">Seguidores: {{ user.followersCount }}</p>
+      </div>
+    </div>
+  </div>
 </div>
