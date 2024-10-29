@@ -1,16 +1,30 @@
-<section class="bg-[#D9D9D9] rounded-lg p-4">
+<section class="bg-gray-100 shadow-lg rounded-lg p-6 transition-transform duration-300 hover:shadow-xl">
     <form [formGroup]="postForm" (ngSubmit)="onSubmit()">
-        <div class="flex items-center">
-            <!-- Input do post -->
-            <div class="flex-grow">
-                <input type="text" formControlName="content" class="w-full p-2 rounded-lg" placeholder="O que você tanto pensa ?">
+        <div class="flex flex-col space-y-4">
+            <!-- Input do post com fundo diferente -->
+            <div class="relative bg-white p-4 rounded-lg shadow-md">
+                <textarea 
+                    formControlName="content" 
+                    class="w-full p-3 rounded-lg border-none focus:ring-2 focus:ring-blue-500 transition duration-200 resize-none" 
+                    placeholder="Compartilhe seus pensamentos..." 
+                    rows="4"
+                    style="overflow: hidden;"
+                ></textarea>
+                
             </div>
 
-            <!-- Ações do lado direito -->
-            <div class="ml-4 flex flex-col space-y-2">
-                <!-- Botão de Postar -->
-                <button type="submit" class="bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
-                    Postar
+            <!-- Ações do lado direito com ícones interativos -->
+            <div class="flex justify-between items-center">
+                <div class="flex space-x-4">
+                    <button type="button" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition duration-200">
+                        <i class="fas fa-camera"></i> Imagem
+                    </button>
+                    <button type="button" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition duration-200">
+                        <i class="fas fa-smile"></i> Emoji
+                    </button>
+                </div>
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200">
+                    Publicar
                 </button>
             </div>
         </div>

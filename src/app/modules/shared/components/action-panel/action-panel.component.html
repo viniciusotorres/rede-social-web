@@ -1,10 +1,16 @@
-<section class="bg-[#D9D9D9] p-2 rounded-lg flex justify-end items-center space-x-4">
+<section class="flex justify-around items-center space-x-4">
     <!-- Ícone de Curtir -->
     <div class="flex items-center space-x-1">
         <i class="fas fa-thumbs-up cursor-pointer text-xl"
            [ngClass]="{'text-blue-500': likedByUser, 'hover:text-blue-500': !likedByUser, 'transform hover:scale-125 transition duration-200': true}"
            (click)="toggleLike()"></i> <!-- Ícone de curtir com efeito de hover -->
         <span>{{ likesCount }}</span> <!-- Quantidade de curtidas -->
+    </div>
+    
+    <!-- Ícone de Não Curtir -->
+    <div class="flex items-center space-x-1">
+        <i class="fas fa-thumbs-down cursor-pointer text-xl hover:text-red-500 transform hover:scale-125 transition duration-200"></i> <!-- Ícone de não curtir com efeito de hover -->
+        <span>{{ dislikesCount }}</span> <!-- Quantidade de não curtidas -->
     </div>
     
     <!-- Ícone de Comentar -->

@@ -1,17 +1,28 @@
 <div class="flex flex-col lg:flex-row gap-4 justify-around h-full">
-  <div class="bg-gray-100 p-4 rounded mb-2 w-full lg:w-[10%] hidden lg:block">
-    <img src="https://www.designi.com.br/images/preview/12161376.jpg" alt="Profile Picture"
-      class="w-24 h-24 rounded-full mx-auto object-cover mb-4">
-    <p class="font-bold text-center">{{ loggedInUser.name }}</p>
-    <p class="text-sm text-gray-600 text-center">{{ loggedInUser.email }}</p>
-    <p class="text-sm text-green-600 text-center">{{ loggedInUser.status }}</p>
-    <div class="mt-4">
-      <p class="text-sm text-gray-600">Seguidores: {{ loggedInUser.followers }}</p>
-      <p class="text-sm text-gray-600">Seguindo: {{ loggedInUser.following }}</p>
-      <p class="text-sm text-gray-600">Posts: {{ loggedInUser.posts }}</p>
-      <p class="text-sm text-gray-600">Alcance: {{ loggedInUser.reach }}</p>
+  <div class="bg-gray-100 p-6 rounded-lg mb-4 w-full lg:w-[10%] hidden lg:block shadow-lg transition-transform duration-300 hover:shadow-xl">
+    <div class="flex flex-col items-center">
+        <img src="https://www.designi.com.br/images/preview/12161376.jpg" alt="Profile Picture"
+            class="w-24 h-24 rounded-full mb-4 object-cover"
+            [ngClass]="{'border-4 border-green-500': loggedInUser.status === 'Online', 'border-4 border-gray-500': loggedInUser.status === 'Offline'}">
+        <p class="font-bold text-lg text-center text-gray-800">{{ loggedInUser.userName }}</p>
+        <p class="text-sm text-gray-600 text-center">{{ loggedInUser.email }}</p>
+        <div class="flex items-center">
+          <span [ngClass]="{'bg-green-600': loggedInUser.status === 'Online', 'bg-gray-400': loggedInUser.status === 'Offline'}" 
+                class="w-3 h-3 rounded-full mr-2"></span>
+          <p class="text-sm pt-[0.6rem] items-center jusify-center" 
+             [ngClass]="{'text-green-600': loggedInUser.status === 'Online', 'text-gray-600': loggedInUser.status === 'Offline'}">
+              {{ loggedInUser.status }}
+          </p>
+      </div>
     </div>
-  </div>
+    <div class="mt-4 text-center">
+        <p class="text-sm text-gray-600">Seguidores: <span class="font-semibold">{{ loggedInUser.followersCount }}</span></p>
+        <p class="text-sm text-gray-600">Seguindo: <span class="font-semibold">{{ loggedInUser.followingCount }}</span></p>
+        <p class="text-sm text-gray-600">Posts: <span class="font-semibold">{{ loggedInUser.postsCount }}</span></p>
+        <p class="text-sm text-gray-600">Alcance: <span class="font-semibold">{{ loggedInUser.reach }}</span></p>
+    </div>
+</div>
+
 
   <div class="flex flex-col items-center w-full lg:w-[60%]">
     <!-- Área para fazer um post -->
@@ -32,23 +43,27 @@
 
   <div class="flex flex-col w-full lg:w-[20%] gap-4 hidden lg:block h-full">
     <p class="font-bold text-lg mb-2">Topper Posts</p>
-    <div *ngFor="let post of postsTopper" class="flex justify-between items-center bg-gray-100 p-2 rounded mb-2">
+    <div *ngFor="let post of postsTopper" class="relative flex justify-between items-center bg-gray-100 p-2 rounded mb-2">
       <div>
         <p class="font-bold">{{ post.content }}</p>
         <p class="text-sm text-gray-600">Curtidas: {{ post.likes.length }} | Comentários: {{ post.comments.length }}</p>
       </div>
       <div class="text-sm text-gray-600">
         {{ post.createdAt | date: 'HH:mm' }}
-
+      </div>
+      <div *ngIf="post.user_id === loggedInUser.userId" class="absolute top-2 right-2">
+        <i class="fas fa-crown" matTooltip="Parabéns, você está no topo!"></i>
       </div>
     </div>
 
     <p class="font-bold text-lg mb-2 mt-4">Topper Users</p>
-    <div *ngFor="let user of usersTopper" class="flex justify-between items-center bg-gray-100 p-2 rounded mb-2">
+    <div *ngFor="let user of usersTopper" class="relative flex justify-between items-center bg-gray-100 p-2 rounded mb-2">
       <div>
         <p class="font-bold">{{ user.name }}</p>
         <p class="text-sm text-gray-600">Seguidores: {{ user.followersCount }}</p>
       </div>
+      <div *ngIf="user.id === loggedInUser.userId" class="absolute top-2 right-2 ">
+        <i class="fas fa-crown" matTooltip="Parabéns, você está no topo!"></i>
+      </div>
     </div>
-  </div>
 </div>
