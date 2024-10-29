@@ -1,12 +1,37 @@
-<section class="bg-white p-4 rounded-lg shadow-md w-full max-w-md mx-auto">
+<div class="flex justify-around w-full">
+  <!-- Coluna da esquerda com sugestões -->
+  <div class="hidden lg:block w-1/4 ml-4">
+    <section class="bg-gray-100 p-4 rounded-lg shadow-md">
+      <h3 class="text-lg font-bold mb-2">Sugestões de Amigos</h3>
+      <ul>
+        <li class="flex items-center space-x-2 mb-2">
+          <img src="https://via.placeholder.com/40" alt="Friend 1" class="w-10 h-10 rounded-full">
+          <span>Amigo 1</span>
+        </li>
+        <li class="flex items-center space-x-2 mb-2">
+          <img src="https://via.placeholder.com/40" alt="Friend 2" class="w-10 h-10 rounded-full">
+          <span>Amigo 2</span>
+        </li>
+        <li class="flex items-center space-x-2">
+          <img src="https://via.placeholder.com/40" alt="Friend 3" class="w-10 h-10 rounded-full">
+          <span>Amigo 3</span>
+        </li>
+      </ul>
+    </section>
+  </div>
+
+  <!-- Seção do Usuário Logado -->
+  <section class="bg-white p-6 rounded-lg shadow-md w-full max-w-md mx-4">
     <div class="flex items-center space-x-4">
       <!-- Foto do usuário -->
-      <div class="flex-shrink-0">
-        <img [src]="'data:image/jpeg;base64,' + user.photo" alt="User Photo" class="w-24 h-24 rounded-full object-cover">
+      <div class="flex-shrink-0 mt-6">
+        <img src="https://www.designi.com.br/images/preview/12161376.jpg" 
+             alt="Profile Picture" 
+             class="w-[8rem] h-[8rem] rounded-full object-cover">
       </div>
       <!-- Informações do usuário -->
       <div>
-        <h2 class="text-xl font-bold">{{ user.name }}</h2>
+        <h2 class="text-2xl font-bold">{{ user.name }}</h2>
         <p class="text-gray-600">{{ user.bio }}</p>
         <div class="flex space-x-4 mt-2">
           <div>
@@ -18,11 +43,47 @@
             <span class="text-gray-600">Seguindo</span>
           </div>
         </div>
+        <div>
+          <button class="bg-blue-500 text-white px-4 py-2 rounded-lg mt-4">Seguir</button>
+          <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg mt-4">Enviar Mensagem</button>
+        </div>
       </div>
     </div>
   </section>
-  <section class="bg-white p-4 rounded-lg shadow-md w-full max-w-md mx-auto mt-4">
-    <div class="flex items-center space-x-4">
-        <p>Últimos posts</p>
+
+  <!-- Coluna da direita com hashtags populares -->
+  <div class="hidden lg:block w-1/4 mr-4">
+    <section class="bg-gray-100 p-4 rounded-lg shadow-md">
+      <h3 class="text-lg font-bold mb-2">Hashtags Populares</h3>
+      <ul>
+        <li class="text-blue-500 hover:underline cursor-pointer">#Felicidade</li>
+        <li class="text-blue-500 hover:underline cursor-pointer">#Inspiração</li>
+        <li class="text-blue-500 hover:underline cursor-pointer">#Tecnologia</li>
+      </ul>
+    </section>
+  </div>
+</div>
+
+<section class="bg-white p-4 rounded-lg shadow-md w-full max-w-md mx-auto mt-4">
+  <div class="flex items-center justify-between">
+    <p class="text-lg font-bold">Últimos Posts</p>
+    <a href="#" class="text-blue-500 hover:underline">Ver todos</a>
+  </div>
+  <div class="mt-4 space-y-4">
+    <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+      <h4 class="font-semibold">Título do Post 1</h4>
+      <p class="text-gray-600">Descrição breve do post...</p>
+      <span class="text-sm text-gray-500">10 minutos atrás</span>
     </div>
-  </section>
+    <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+      <h4 class="font-semibold">Título do Post 2</h4>
+      <p class="text-gray-600">Descrição breve do post...</p>
+      <span class="text-sm text-gray-500">30 minutos atrás</span>
+    </div>
+    <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+      <h4 class="font-semibold">Título do Post 3</h4>
+      <p class="text-gray-600">Descrição breve do post...</p>
+      <span class="text-sm text-gray-500">1 hora atrás</span>
+    </div>
+  </div>
+</section>
