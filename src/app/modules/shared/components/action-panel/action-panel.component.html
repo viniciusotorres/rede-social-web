@@ -1,21 +1,47 @@
-<section class="flex justify-around items-center space-x-4">
+<section class="flex justify-around items-center space-x-4 relative">
     <!-- Ícone de Curtir -->
     <div class="flex items-center space-x-1">
         <i class="fas fa-thumbs-up cursor-pointer text-xl"
            [ngClass]="{'text-blue-500': likedByUser, 'hover:text-blue-500': !likedByUser, 'transform hover:scale-125 transition duration-200': true}"
            (click)="toggleLike()"></i> <!-- Ícone de curtir com efeito de hover -->
         <span>{{ likesCount }}</span> <!-- Quantidade de curtidas -->
+        <span class="cursor-pointer text-sm text-gray-600" (click)="toggleLikesList()">
+            <span *ngFor="let like of likes; let i = index">
+                {{ like.userId === loggedInUserId ? 'Você curtiu!' : (i < 1 ? like.username : (i === 1 ? '...' : '')) }}
+            </span>
+        </span>
     </div>
     
     <!-- Ícone de Não Curtir -->
     <div class="flex items-center space-x-1">
-        <i class="fas fa-thumbs-down cursor-pointer text-xl hover:text-red-500 transform hover:scale-125 transition duration-200"></i> <!-- Ícone de não curtir com efeito de hover -->
+        <i class="fas fa-thumbs-down cursor-pointer text-xl"
+           [ngClass]="getDislikeClasses()"
+           (click)="toggleDislike()"></i> <!-- Ícone de não curtir com efeito de hover -->
         <span>{{ dislikesCount }}</span> <!-- Quantidade de não curtidas -->
+        <span class="cursor-pointer text-sm text-gray-600" (click)="toggleDislikesList()">
+            <span *ngFor="let dislike of dislikes; let i = index">
+                {{ dislike.userId === loggedInUserId ? 'Você não curtiu!' : (i < 1 ? dislike.username : (i === 1 ? '...' : '')) }}
+            </span>
+        </span>
     </div>
     
     <!-- Ícone de Comentar -->
     <div class="flex items-center space-x-1">
         <i class="fas fa-comment cursor-pointer text-xl hover:text-green-500 transform hover:scale-125 transition duration-200"></i> <!-- Ícone de comentar com efeito de hover -->
         <span>{{ commentsCount }}</span> <!-- Quantidade de comentários -->
+    </div>
+
+    <!-- Lista de Likes -->
+    <div *ngIf="showLikes" class="absolute top-10 left-0 bg-white shadow-lg rounded-lg p-4 z-10">
+        <div *ngFor="let like of likes" class="p-2 border-b border-gray-200">
+            <p class="text-sm text-gray-800">{{ like.userId === loggedInUserId ? 'Você curtiu!' : like.username }}</p>
+        </div>
+    </div>
+
+    <!-- Lista de Dislikes -->
+    <div *ngIf="showDislikes" class="absolute top-10 left-0 bg-white shadow-lg rounded-lg p-4 z-10">
+        <div *ngFor="let dislike of dislikes" class="p-2 border-b border-gray-200">
+            <p class="text-sm text-gray-800">{{ dislike.userId === loggedInUserId ? 'Você não curtiu!' : dislike.username }}</p>
+        </div>
     </div>
 </section>
