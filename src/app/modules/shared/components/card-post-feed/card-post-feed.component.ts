@@ -2,11 +2,12 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActionPanelComponent } from '../action-panel/action-panel.component';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FeedService } from '../../../core/service/internal/feed/feed.service';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 interface Post {
   id: number;
   content: string;
-  dislikes: number;
+  dislikes:{ id: number; user_id: number }[];
   createdAt: string;
   likes: { id: number; user_id: number }[];
   comments: any[];
@@ -18,7 +19,10 @@ interface Post {
 @Component({
   selector: 'app-card-post-feed',
   standalone: true,
-  imports: [ActionPanelComponent, CommonModule],
+  imports: [
+    ActionPanelComponent, 
+    CommonModule, 
+    ReactiveFormsModule],
   templateUrl: './card-post-feed.component.html',
   styleUrls: ['./card-post-feed.component.scss'],
   providers: [DatePipe]
@@ -36,11 +40,22 @@ export class CardPostFeedComponent implements OnInit {
   dislikesCount: number = 0;
   commentsCount: number = 0;
   likedByUser: boolean = false;
+  commentForm: FormGroup;
+  comments:  any[] = [];
+  showComments: boolean = false;
 
-  constructor(private datePipe: DatePipe, private feedService: FeedService) { }
+  constructor(
+    private datePipe: DatePipe, 
+    private feedService: FeedService, 
+    private fb: FormBuilder) { 
+    this.commentForm = this.fb.group({
+      comment: ['']
+    });
+  }
 
   ngOnInit(): void {
     this.initializePostData();
+    this.loadComments();
   }
 
   private initializePostData(): void {
@@ -58,10 +73,26 @@ export class CardPostFeedComponent implements OnInit {
 
      
       this.likesCount = this.post.likes.length;
-      this.dislikesCount = this.post.dislikes;
+      this.dislikesCount = this.post.dislikes.length;
       this.commentsCount = this.post.comments.length;
       const userId = sessionStorage.getItem('userId');
       this.likedByUser = this.post.likes.some(like => like.user_id === Number(userId));
+    }
+  }
+
+  private loadComments(): void {
+    const userId = sessionStorage.getItem('userId');
+    if (userId) {
+      this.feedService.listComments(Number(userId), this.post.id).subscribe(
+        (data: any) => {
+          this.comments = data.comments;
+        },
+        (error: any) => {
+          console.error('Error loading comments', error);
+        }
+      );
+    } else {
+      console.error('No user ID found in sessionStorage');
     }
   }
 
@@ -85,4 +116,39 @@ export class CardPostFeedComponent implements OnInit {
     const userId = sessionStorage.getItem('userId');
     return this.post.user_id === Number(userId);
   }
-}
+
+  addComment(): void {
+    const commentContent = this.commentForm.get('comment')?.value;
+    if (commentContent) {
+      this.feedService.commentPost(this.post.id, commentContent).subscribe(
+        (response: any) => {
+          console.log('Comment added successfully', response);
+          this.commentForm.reset();
+          this.loadComments();
+          this.postUpdated.emit();
+        },
+        (error: any) => {
+          console.error('Error adding comment', error);
+        }
+      );
+    }
+  }
+
+  deleteComment(commentId: number): void {
+    this.feedService.deleteComment(this.post.id, commentId).subscribe(
+      (response: any) => {
+        console.log('Comment deleted successfully', response);
+        this.loadComments();
+        this.postUpdated.emit();
+      },
+      (error: any) => {
+        console.error('Error deleting comment', error);
+      }
+    );
+  }
+
+  toggleComments(): void {
+    this.showComments = !this.showComments;
+  }
+
+  }
