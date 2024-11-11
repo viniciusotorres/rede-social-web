@@ -21,16 +21,16 @@
   </div>
 
   <!-- Seção do Usuário Logado -->
-  <section class="bg-white p-6 rounded-lg shadow-md w-full max-w-md mx-4">
-    <div class="flex items-center space-x-4">
+  <section class="bg-white p-6 rounded-lg shadow-md w-full lg:max-w-md mx-4 mb-4 lg:mb-0">
+    <div class="flex flex-col lg:flex-row items-center space-x-4">
       <!-- Foto do usuário -->
-      <div class="flex-shrink-0 mt-6">
+      <div class="flex-shrink-0 mt-6 lg:mt-0">
         <img src="https://www.designi.com.br/images/preview/12161376.jpg" 
              alt="Profile Picture" 
              class="w-[8rem] h-[8rem] rounded-full object-cover">
       </div>
       <!-- Informações do usuário -->
-      <div>
+      <div class="mt-4 lg:mt-0">
         <h2 class="text-2xl font-bold">{{ user.name }}</h2>
         <p class="text-gray-600">{{ user.bio }}</p>
         <div class="flex space-x-4 mt-2">
@@ -43,11 +43,32 @@
             <span class="text-gray-600">Seguindo</span>
           </div>
         </div>
-        <div>
-          <button class="bg-blue-500 text-white px-4 py-2 rounded-lg mt-4">Seguir</button>
-          <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg mt-4">Enviar Mensagem</button>
+        <div class="flex space-x-4 mt-4">
+          <div>
+            <span class="font-bold">{{ profileViews }}</span>
+            <span class="ml-2 text-sm text-gray-500">Visualizações de Perfil</span>
+          </div>
+        </div>
+        <div class="mt-4">
+          <p class="text-sm text-gray-500">Observadores Recentes</p>
+          <div class="flex space-x-4 overflow-x-auto">
+            <div *ngFor="let viewer of recentViewers.slice(0, 3)" class="flex-shrink-0">
+              <img 
+              [src]="viewer.photoUrl" 
+              alt="{{ viewer.name }}" 
+              matTooltip="{{ viewer.name }}" 
+              class="w-10 h-10 rounded-full cursor-pointer">
+            </div>
+            <div *ngIf="recentViewers.length > 3" class="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 text-gray-700">
+              +{{ recentViewers.length - 3 }}
+            </div>
+          </div>
         </div>
       </div>
+    </div>
+    <!-- Data da métrica -->
+    <div class="text-sm text-gray-500 flex justify-end mt-4">
+      <p>Métrica dos últimos 30 dias</p>
     </div>
   </section>
 
@@ -70,20 +91,9 @@
     <a href="#" class="text-blue-500 hover:underline">Ver todos</a>
   </div>
   <div class="mt-4 space-y-4">
-    <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
-      <h4 class="font-semibold">Título do Post 1</h4>
-      <p class="text-gray-600">Descrição breve do post...</p>
-      <span class="text-sm text-gray-500">10 minutos atrás</span>
-    </div>
-    <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
-      <h4 class="font-semibold">Título do Post 2</h4>
-      <p class="text-gray-600">Descrição breve do post...</p>
-      <span class="text-sm text-gray-500">30 minutos atrás</span>
-    </div>
-    <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
-      <h4 class="font-semibold">Título do Post 3</h4>
-      <p class="text-gray-600">Descrição breve do post...</p>
-      <span class="text-sm text-gray-500">1 hora atrás</span>
+    <div *ngFor="let post of lastPosts" class="p-4 bg-gray-50 rounded-lg shadow-sm">
+      <p class="text-gray-600">{{ post.content }}</p>
+      <span class="text-sm text-gray-500">{{ post.createdAt | date: 'short' }}</span>
     </div>
   </div>
 </section>

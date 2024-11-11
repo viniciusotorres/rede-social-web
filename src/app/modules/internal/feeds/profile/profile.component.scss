@@ -1,0 +1,11 @@
+.carousel-container {
+    display: flex;
+    overflow: hidden;
+    .viewer-item {
+      flex: 0 0 auto;
+      width: 8rem; // Ajusta a largura para exibir dois itens por vez
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
