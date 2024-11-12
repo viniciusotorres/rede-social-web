@@ -4,6 +4,9 @@ import { CommonModule } from '@angular/common';
 import { FeedService } from '../../../core/service/internal/feed/feed.service';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ProfileViewDTO } from '../../../core/models/profile.interface';
+import { ProfileService } from '../../../core/service/internal/profile/profile.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -20,8 +23,17 @@ export class ProfileComponent implements OnInit {
   profileViews: number = 0;
   recentViewers: any[] = [];
 
-  constructor(private userService: UserService, private feedService: FeedService) { }
+  constructor(
+    private router: Router,
+    private userService: UserService,
+    private feedService: FeedService,
+    private profileService: ProfileService
+  ) { }
 
+  /**
+   * Método chamado quando o componente é inicializado.
+   * Obtém o ID do usuário logado e carrega os dados do usuário, últimos posts e métricas do perfil.
+   */
   ngOnInit() {
     this.loggedInUserId = sessionStorage.getItem('userId');
     if (this.loggedInUserId) {
@@ -31,36 +43,60 @@ export class ProfileComponent implements OnInit {
     }
   }
 
+  /**
+   * Obtém os dados do usuário.
+   * @param userId - ID do usuário.
+   */
   bringUser(userId: string) {
     this.userService.getUser(userId).subscribe((response) => {
       this.user = response;
     });
   }
 
+  /**
+   * Carrega os últimos posts do usuário.
+   * @param userId - ID do usuário.
+   */
   loadLastPosts(userId: number) {
     this.feedService.getLastPosts(userId).subscribe((response) => {
       this.lastPosts = response.posts;
     });
   }
 
+  /**
+   * Carrega as métricas do perfil do usuário, incluindo visualizações de perfil e visualizadores recentes.
+   * @param userId - ID do usuário.
+   */
   loadProfileMetrics(userId: number) {
-    // Dados falsos das métricas do perfil
-    this.profileViews = 250;
-    this.recentViewers = [
-      { name: 'Alice', photoUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnw4H_AYUZ9mLxRmLRiEQZQz9I29O0kHKNQQ&s' },
-      { name: 'Fernada', photoUrl: 'https://wl-incrivel.cf.tsp.li/resize/728x/jpg/0ec/140/d189845022bb6eddb88bb5279a.jpg' },
-      { name: 'Gabriel', photoUrl: 'https://img.freepik.com/fotos-gratis/retrato-de-homem-branco-isolado_53876-40306.jpg' },
-      { name: 'Alice', photoUrl: 'https://via.placeholder.com/40' },
-      { name: 'Bob', photoUrl: 'https://via.placeholder.com/40' },
-      { name: 'Charlie', photoUrl: 'https://via.placeholder.com/40' }
-    ];
+    this.profileService.getViewProfileById(userId).subscribe((response: ProfileViewDTO) => {
+      this.profileViews = response.viewers.length;
+      this.recentViewers = response.viewers.map(viewer => ({
+        id: viewer.id,
+        name: viewer.name,
+        photoUrl: 'https://via.placeholder.com/40' 
+      }));
+    });
   }
 
-  // Método para alternar entre perfis
+  /**
+   * Alterna entre perfis de usuários.
+   * @param userId - ID do usuário.
+   */
   switchUser(userId: string) {
     this.isViewingOwnProfile = this.loggedInUserId === userId;
     this.bringUser(userId);
     this.loadLastPosts(Number(userId));
     this.loadProfileMetrics(Number(userId));
+  }
+
+  goToUserProfile(userId: string): void {
+    const storedUserId = sessionStorage.getItem('userId');
+    const numericStoredUserId = storedUserId ? parseInt(storedUserId, 10) : null;
+
+    if (numericStoredUserId === parseInt(userId, 10)) {
+      this.router.navigate(['/feed/perfil', userId]);
+    } else {
+      this.router.navigate(['/feed/perfil-pub', userId]);
+    }
   }
 }

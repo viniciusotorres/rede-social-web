@@ -9,7 +9,7 @@ import { UserService } from './modules/core/service/internal/user/user.service';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, LoadingComponent, CommonModule, MaterialModule],
+  imports: [RouterOutlet, CommonModule, MaterialModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

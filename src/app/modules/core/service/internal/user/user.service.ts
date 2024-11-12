@@ -25,6 +25,15 @@ export class UserService {
     }
   }
 
+  isFollowing(followerId: string, followedId: string): Observable<any> {
+    const token = sessionStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get(`${this.url}/${this.base}/${followerId}/is-following/${followedId}`, { headers })
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
   getUsers(): Observable<any> {
     const token = sessionStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
@@ -54,19 +63,13 @@ export class UserService {
   followUser(followerId: string, followedId: string): Observable<any> {
     const token = sessionStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.post(`${this.url}/${this.base}/${followerId}/follow/${followedId}`, {}, { headers })
-      .pipe(
-        catchError(this.handleError)
-      );
+    return this.http.post(`${this.url}/${this.base}/${followerId}/follow/${followedId}`, {}, { headers, responseType: 'text' })
   }
 
   unfollowUser(followerId: string, followedId: string): Observable<any> {
     const token = sessionStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.delete(`${this.url}/${this.base}/${followerId}/unfollow/${followedId}`, { headers })
-      .pipe(
-        catchError(this.handleError)
-      );
+    return this.http.delete(`${this.url}/${this.base}/${followerId}/unfollow/${followedId}`, { headers, responseType: 'text' })
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {
