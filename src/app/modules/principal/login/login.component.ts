@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { CommonModule } from '@angular/common';
 import { loginInterface } from '../../core/models/login.interface';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Toast, ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +22,8 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder, 
     private auth: AuthService,
     private router: Router,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute,
+    private toast: ToastrService) { }
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -37,17 +39,19 @@ export class LoginComponent implements OnInit {
         response => {
           if (response.token) {
             this.isLoading = true;
+            this.toast.success('Login efetuado com sucesso!');
             sessionStorage.setItem('token', response.token);
             sessionStorage.setItem('userId', response.userId);
             this.auth.emitLoginEvent();
             this.router.navigate(['/feed']).then(() => {
-              window.location.reload(); 
+              window.location.reload();
             });
             
           }
         },
         error => {
           this.isLoading = false;
+          this.toast.error('Email ou senha incorretos');
           console.error('Login failed', error);
         }
       );

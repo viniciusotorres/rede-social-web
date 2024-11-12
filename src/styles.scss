@@ -1,6 +1,8 @@
 @tailwind base;
 @tailwind components;
-@tailwind utilities;/* You can add global styles to this file, and also import other style files */
+@tailwind utilities;
+
+@import  'ngx-toastr/toastr' ;
 
 html, body, app-root {
     height: 100%;
@@ -14,16 +16,12 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 
 .spinner-border {
-    display: inline-block;
-    width: 1rem;
-    height: 1rem;
-    vertical-align: text-bottom;
-    border: 0.25em solid currentColor;
-    border-right-color: transparent;
-    border-radius: 50%;
-    animation: spinner-border 0.75s linear infinite;
-  }
-  
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  vertical-align: text-bottom;
+}
+
   @keyframes spinner-border {
     to {
       transform: rotate(360deg);

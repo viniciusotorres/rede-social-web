@@ -398,6 +398,29 @@ export class FeedService {
     }
   }
 
+   /**
+   * Obtém os últimos posts de um usuário.
+   * @param userId ID do usuário.
+   * @returns Observable com os dados dos últimos posts.
+   * @throws Error se o token não estiver presente na sessionStorage.
+   */
+   getLastPosts(userId: number): Observable<any> {
+    try {
+      const token = sessionStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found in sessionStorage');
+      }
+
+      const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+      return this.http.get(`${this.url}/${this.base}/last-post/${userId}`, { headers })
+        .pipe(
+          catchError(this.handleError)
+        );
+    } catch (error) {
+      return throwError('An unexpected error occurred');
+    }
+  }
+
   // ==========================
   // Tratamento de Erros
   // ==========================
