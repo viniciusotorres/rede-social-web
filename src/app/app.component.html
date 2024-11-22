@@ -1,54 +1,54 @@
 <div class="min-h-screen flex flex-col md:flex-row">
-
     <div class="flex flex-col flex-grow ">
         <!-- Navbar -->
-         @if (isLogged) {
-        <nav class="bg-gray-800 text-white p-4 ">
+        @if (isLogged) {
+        <nav class="bg-gray-100 text-white p-4 ">
             <div class="container mx-auto flex justify-between items-center">
-                <p class="items-center justify-center">The tribe</p>
+                <img src="https://png.pngtree.com/png-clipart/20230913/original/pngtree-indian-head-vector-png-image_11054467.png"
+                    alt="" class="w-[4rem] h-[4rem] cursor-pointer ">
                 @if (isLogged) {
                 <div class="flex space-x-4 items-center">
                     <div class="relative">
-                        <input type="text" class="bg-gray-700 text-white p-2 rounded" placeholder="Pesquisar..." (input)="searchUser($event)">
-                        <div *ngIf="searchResults.length > 0" class="absolute bg-white text-black mt-2 rounded shadow-lg w-full z-10">
-                          <ul>
-                            <li *ngFor="let user of searchResults" class="p-2 hover:bg-gray-200 cursor-pointer" (click)="goToUserProfile(user.id)">
-                              <div class="flex items-center">
-                                <img [src]="'data:image/jpeg;base64,' + user.photo" alt="User Photo" class="w-8 h-8 rounded-full object-cover mr-2">
-                                <span>{{ user.name }}</span>
-                              </div>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    <a href="#" class="hover:text-gray-400">
-                        <i class="fas fa-bell"></i>
+                        <input type="text" class="bg-gray-100 text-black p-2 rounded" placeholder="Pesquisar..."
+                            (input)="searchUser($event, menuTrigger)" [matMenuTriggerFor]="searchMenu"
+                            #menuTrigger="matMenuTrigger">
+                        <mat-menu #searchMenu="matMenu" [overlapTrigger]="false" class="w-96">
+                            <div *ngIf="searchResults.length > 0">
+                                <ul>
+                                    <li *ngFor="let user of searchResults" class="p-2 hover:bg-gray-200 cursor-pointer"
+                                        (click)="goToUserProfile(user.id, menuTrigger)">
+                                        <div class="flex items-center">
+                                            <img src="https://png.pngtree.com/png-clipart/20230913/original/pngtree-indian-head-vector-png-image_11054467.png"
+                                                alt="User Photo" class="w-8 h-8 rounded-full object-cover mr-2">
+                                            <span>{{ user.name }}</span>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </mat-menu>
+                    </div>
+                    <a href="#" class="hover:text-gray-400 cursor-pointer">
+                        <i class="fas fa-bell text-black"></i>
                     </a>
-                    <a  [matMenuTriggerFor]="menu" class="hover:text-gray-400">
-                        <i class="fas fa-circle"></i>
+                    <a [matMenuTriggerFor]="menu" class="hover:text-gray-400 cursor-pointer">
+                        <i class="fas fa-circle text-black"></i>
                     </a>
                     <mat-menu #menu="matMenu">
                         <button mat-menu-item (click)="goToMyProfile()">
                             <i class="fas fa-user"></i> Meu Perfil
                         </button>
-                        <button mat-menu-item >
-                            <i class="fas fa-cog"></i> Configurações
-                        </button>
                         <button mat-menu-item (click)="goToFeed()">
                             <i class="fas fa-rss"></i> Feed
-                        </button>
-                        <button mat-menu-item (click)="changeStatus()">
-                            <i class="fas fa-exchange-alt"></i> Mudar de Status
                         </button>
                         <button mat-menu-item (click)="logout()">
                             <i class="fas fa-sign-out-alt"></i> Sair
                         </button>
                     </mat-menu>
                 </div>
-            }
+                }
             </div>
         </nav>
-    }
+        }
 
         <!-- Conteúdo Principal -->
         <main [ngClass]="{'p-4': isLogged, 'flex-grow': true, 'md:h-[60%]': true}">

@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from './modules/core/service/auth/auth.service';
 import { MaterialModule } from './material.module';
 import { UserService } from './modules/core/service/internal/user/user.service';
+import { MatMenuTrigger } from '@angular/material/menu';
 
 @Component({
   selector: 'app-root',
@@ -16,6 +17,7 @@ import { UserService } from './modules/core/service/internal/user/user.service';
 export class AppComponent implements OnInit {
   title = 'rede-social-front';
   searchResults: any[] = [];
+  showSearchResults: boolean = false;
   searchQuery: string = '';
   isLoading = true;
   isLogged = false;
@@ -75,25 +77,30 @@ export class AppComponent implements OnInit {
     this.onLogout();
   }
   
-  searchUser(event: Event): void {
+  searchUser(event: Event, menuTrigger: MatMenuTrigger): void {
     const inputElement = event.target as HTMLInputElement;
     const name = inputElement.value;
 
     if (name.trim() === '') {
       this.searchResults = [];
+      menuTrigger.closeMenu();
       return;
     }
 
     this.userService.getUsersByName(name).subscribe((data: any) => {
       this.searchResults = data;
-      this.idOtherUser = data.id;
+      if (this.searchResults.length > 0) {
+        menuTrigger.openMenu();
+      } else {
+        menuTrigger.closeMenu();
+      }
     });
   }
 
   changeStatus(): void {
   }
 
-  goToUserProfile(userId: string): void {
+  goToUserProfile(userId: string, menuTrigger: MatMenuTrigger): void {
     const storedUserId = sessionStorage.getItem('userId');
     const numericStoredUserId = storedUserId ? parseInt(storedUserId, 10) : null;
 
@@ -102,5 +109,6 @@ export class AppComponent implements OnInit {
     } else {
       this.router.navigate(['/feed/perfil-pub', userId]);
     }
+    menuTrigger.closeMenu();
   }
 }
