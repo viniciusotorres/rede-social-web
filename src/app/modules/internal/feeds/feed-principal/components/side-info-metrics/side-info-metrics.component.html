@@ -1,0 +1,26 @@
+<div class="flex bg-[rgb(255,185,75)] p-4 rounded flex-col">
+    <p class="font-bold text-lg mb-2">Topper Posts</p>
+    <div *ngFor="let post of postsTopper" class="relative flex justify-between items-center shadow-lg  p-2 rounded mb-2">
+      <div>
+        <p class="font-bold">{{ post.content }}</p>
+        <p class="text-sm text-gray-600">Curtidas: {{ post.likes.length }} | Comentários: {{ post.comments.length }}</p>
+      </div>
+      <div class="text-sm text-gray-600">
+        {{ post.createdAt | date: 'HH:mm' }}
+      </div>
+      <div *ngIf="post.user_id === loggedInUser.userId" class="absolute top-2 right-2">
+        <i class="fas fa-crown" matTooltip="Parabéns, você está no topo!"></i>
+      </div>
+    </div>
+
+    <p class="font-bold text-lg mb-2 mt-4">Topper Users</p>
+    <div *ngFor="let user of usersTopper" class="relative flex justify-between items-center shadow-lg p-2 rounded mb-2">
+      <div>
+        <p class="font-bold">{{ user.name }}</p>
+        <p class="text-sm text-gray-600">Seguidores: {{ user.followersCount }}</p>
+      </div>
+      <div *ngIf="user.id === loggedInUser.userId" class="absolute top-2 right-2 ">
+        <i class="fas fa-crown" matTooltip="Parabéns, você está no topo!"></i>
+      </div>
+    </div>
+</div>

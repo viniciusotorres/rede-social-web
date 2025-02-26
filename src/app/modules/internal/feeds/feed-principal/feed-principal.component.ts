@@ -7,11 +7,13 @@ import { Subscription } from 'rxjs';
 import { AuthService } from '../../../core/service/auth/auth.service';
 import { UserService } from '../../../core/service/internal/user/user.service';
 import { MatTooltipModule, TooltipComponent } from '@angular/material/tooltip';
+import { SideInfoUserComponent } from "./components/side-info-user/side-info-user.component";
+import { SideInfoMetricsComponent } from "./components/side-info-metrics/side-info-metrics.component";
 
 @Component({
   selector: 'app-feed-principal',
   standalone: true,
-  imports: [CardSelfFeedComponent, CardPostFeedComponent, CommonModule, MatTooltipModule],
+  imports: [CardSelfFeedComponent, CardPostFeedComponent, CommonModule, MatTooltipModule, SideInfoUserComponent, SideInfoMetricsComponent],
   templateUrl: './feed-principal.component.html',
   styleUrl: './feed-principal.component.scss'
 })
@@ -38,34 +40,17 @@ export class FeedPrincipalComponent {
   constructor(private feedService: FeedService, private auth: AuthService, private user: UserService) { }
 
   ngOnInit(): void {
-    this.loadUserProfile();
     this.loadFeed();
     this.loadTopPosts();
     this.loadTopUsers();
     this.loginEventSubscription = this.auth.getLoginEvent().subscribe(() => {
-      this.loadUserProfile();
       this.loadFeed();
       this.loadTopPosts();
       this.loadTopUsers();
     });
   }
 
-  private loadUserProfile(): void {
-    const userId = sessionStorage.getItem('userId');
-    if (userId) {
-      this.user.getUser(userId).subscribe(
-        (data: any) => {
-          this.loggedInUser = data;
-          this.loggedInUser.status = sessionStorage.getItem('token') ? 'Online' : 'Offline';
-        },
-        (error: any) => {
-          console.error('Error fetching user profile:', error);
-        }
-      );
-    } else {
-      console.error('No user ID found in sessionStorage');
-    }
-  }
+ 
 
   private loadFeed(): void {
     this.feedService.bringFeed().subscribe(

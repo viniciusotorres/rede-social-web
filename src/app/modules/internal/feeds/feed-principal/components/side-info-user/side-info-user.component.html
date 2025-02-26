@@ -1,0 +1,79 @@
+<div class="bg-[rgb(255,185,75)] p-6 rounded-lg mb-4 h-full">
+    <div class="flex flex-col items-center">
+        <img src="https://png.pngtree.com/png-clipart/20230913/original/pngtree-indian-head-vector-png-image_11054467.png"
+            alt="Profile Picture" class="w-24 h-24 rounded-full mb-4 object-cover"
+            [ngClass]="{'border-4 border-green-500': loggedInUser.status === 'Online', 'border-4 border-gray-500': loggedInUser.status === 'Offline'}">
+        <p class="font-bold text-lg text-center text-gray-800">{{ loggedInUser.userName }}</p>
+
+        <div class="flex items-center">
+            <span
+                [ngClass]="{'bg-green-600': loggedInUser.status === 'Online', 'bg-gray-400': loggedInUser.status === 'Offline'}"
+                class="w-3 h-3 rounded-full mr-2"></span>
+            <p class="text-sm pt-[0.6rem] items-center jusify-center"
+                [ngClass]="{'text-green-600': loggedInUser.status === 'Online', 'text-gray-600': loggedInUser.status === 'Offline'}">
+                {{ loggedInUser.status }}
+            </p>
+        </div>
+    </div>
+
+    <div class="flex justify-center mt-4">
+        <button (click)="toggleMetrics()"
+            class=" items-center justify-center text-black p-2 rounded-lg shadow flex">
+            <mat-icon>{{ showMetrics ? 'lock_open' : 'lock' }}</mat-icon>
+            <span class="ml-2">{{ showMetrics ? ' Métricas' : 'Métricas' }}</span>
+        </button>
+    </div>
+
+    @if (showMetrics) {
+    <div class="mt-4 grid grid-cols-2 gap-4 text-center">
+        <div class="flex flex-col items-center gap-3">
+            <mat-icon matTooltip="Seguidores">people</mat-icon>
+            <div class="h-6 w-full rounded text-center items-center">
+                <p>{{ loggedInUser.followersCount }}</p>
+            </div>
+        </div>
+        <div class="flex flex-col items-center gap-3">
+            <mat-icon matTooltip="Seguindo">person_add</mat-icon>
+            <div class="h-6 w-full rounded text-center items-center">
+                <p>{{ loggedInUser.followingCount }}</p>
+            </div>
+        </div>
+        <div class="flex flex-col items-center gap-3">
+            <mat-icon matTooltip="Posts">post_add</mat-icon>
+            <div class="h-6 w-full rounded text-center items-center">
+                <p>{{ loggedInUser.postsCount }}</p>
+            </div>
+        </div>
+        <div class="flex flex-col items-center gap-3">
+            <mat-icon matTooltip="Alcance">trending_up</mat-icon>
+            <div class="h-6 w-full rounded text-center items-center">
+                <p>14</p>
+            </div>
+        </div>
+        <div class="flex flex-col items-center gap-3">
+            <mat-icon matTooltip="Curtidas">thumb_up</mat-icon>
+            <div class="h-6 w-full rounded text-center items-center">
+                <p>1234</p>
+            </div>
+        </div>
+        <div class="flex flex-col items-center gap-3">
+            <mat-icon matTooltip="Comentários">comment</mat-icon>
+            <div class="h-6 w-full rounded text-center items-center">
+                <p>567</p>
+            </div>
+        </div>
+        <div class="flex flex-col items-center gap-3">
+            <mat-icon matTooltip="Compartilhamentos">share</mat-icon>
+            <div class="h-6 w-full rounded text-center items-center">
+                <p>89</p>
+            </div>
+        </div>
+        <div class="flex flex-col items-center gap-3">
+            <mat-icon matTooltip="Visualizações">visibility</mat-icon>
+            <div class="h-6 w-full rounded text-center items-center">
+                <p>4567</p>
+            </div>
+        </div>
+    </div>
+    }
+</div>
